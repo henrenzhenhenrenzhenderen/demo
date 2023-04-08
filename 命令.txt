@@ -1,0 +1,2 @@
+kafka启动一个消费者用来消费日志
+kafka-console-consumer.sh --bootstrap-server node01:9092 --topic flumeTopic --from-beginning

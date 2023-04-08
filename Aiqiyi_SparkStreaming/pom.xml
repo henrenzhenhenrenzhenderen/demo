@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>Aiqiyi_SparkStreaming</groupId>
+  <artifactId>Aiqiyi_SparkStreaming</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <inceptionYear>2008</inceptionYear>
+  <properties>
+    <scala.version>2.12.1</scala.version>
+    <hadoop.version>2.10.2</hadoop.version>
+    <zookeeper.version>3.5.10</zookeeper.version>
+    <kafka.version>2.8.2</kafka.version>
+    <flume.version>1.11.0</flume.version>
+    <hbase.version>2.4.15</hbase.version>
+    <spark.version>2.4.8</spark.version>
+  </properties>
+
+  <dependencies>
+    <!-- Hadoop -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+
+    <!-- ZooKeeper -->
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>${zookeeper.version}</version>
+    </dependency>
+
+    <!-- Kafka -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.12</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
+
+    <!-- Apache Flume -->
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-core</artifactId>
+      <version>${flume.version}</version>
+    </dependency>
+    <!-- Scala 2.12.1 标准库依赖 -->
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.12.1</version>
+    </dependency>
+    <!-- HBase -->
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      <version>${hbase.version}</version>
+    </dependency>
+
+    <!-- Spark -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.11</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_2.11</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+    <!-- Spark Streaming -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming_2.12</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+    <!-- Spark Streaming Kafka -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming-kafka-0-10_2.12</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- 配置 maven-compiler-plugin 编译插件 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source> <!-- 指定源代码的 Java 版本 -->
+          <target>1.8</target> <!-- 指定生成的字节码的 Java 版本 -->
+        </configuration>
+      </plugin>
+      <!-- 配置 maven-shade-plugin 打包插件 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <!-- 配置需要打包的依赖，根据您的项目需求添加 -->
+                  <include>org.apache.spark:spark-core_2.12</include>
+                  <include>org.apache.spark:spark-streaming_2.12</include>
+                  <include>org.apache.spark:spark-sql_2.12</include>
+                  <!-- 其他需要打包的依赖 -->
+                </includes>
+              </artifactSet>
+              <outputDirectory>${project.build.directory}/uber-jar</outputDirectory> <!-- 指定生成的 uber-jar 存放目录 -->
+              <finalName>${project.artifactId}-${project.version}-uber</finalName> <!-- 指定生成的 uber-jar 文件名 -->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- 其他插件配置 -->
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <!-- 配置 maven-surefire-report-plugin 插件，用于生成测试报告 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>3.0.0-M5</version>
+      </plugin>
+      <!-- 配置 maven-site-plugin 插件，用于生成项目站点报告 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.14</version>
+        <dependencies>
+          <!-- 配置 maven-project-info-reports-plugin 插件的依赖，用于生成项目信息报告 -->
+          <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>3.1.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </reporting>
+
+</project>
